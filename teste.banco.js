@@ -3,20 +3,24 @@ import pg from 'pg';
 const { Client } = pg;
 
 // Configuração dos bancos
+// Configuração dos bancos
 const configBanco1 = {
   user: 'postgres',
   host: 'localhost',
-  database: 'datasend',
-  password: '3002',
+  database: 'db_mirror_datasend_production',
+  password: '1234',
   port: 5432,
 };
 
 const configBanco2 = {
-  user: 'postgres',
-  host: 'localhost',
-  database: 'datasend_clone',
-  password: '3002',
+  user: 'datapriority',
+  host: "dbdatasend.ctlfijktiecd.us-east-1.rds.amazonaws.com",
+  database: 'datasendAWS',
+  password: '2GuAWJDjp8IqEd7I2X7L',
   port: 5432,
+  ssl: {
+    rejectUnauthorized: false
+  }
 };
 
 // Função para obter nome das tabelas e contagem de registros
@@ -67,20 +71,20 @@ async function compararBancos() {
   const setBanco2 = new Set(tabelasBanco2);
 
   const tabelasDiferentes = [
-    ...tabelasBanco1.filter(table => !setBanco2.has(table)), 
+    ...tabelasBanco1.filter(table => !setBanco2.has(table)),
     ...tabelasBanco2.filter(table => !setBanco1.has(table))
   ];
-  
+
   if (tabelasDiferentes.length > 0) {
     console.error("\n Diferença nos nomes das tabelas:");
     tabelasDiferentes.forEach(table => console.error(`  - ${table} está presente em apenas um dos bancos`));
-  
-    
+
+
     throw new Error("Os nomes das tabelas são diferentes");
   } else {
     console.log("\n Os nomes das tabelas estão ok");
   }
-  
+
 
   const allTables = new Set([...tabelasBanco1, ...tabelasBanco2]);
 
