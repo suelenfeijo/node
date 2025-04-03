@@ -68,15 +68,19 @@ async function compararBancos() {
 
   const tabelasDiferentes = [
     ...tabelasBanco1.filter(table => !setBanco2.has(table)), 
-    ...tabelasBanco2.filter(table => !setBanco1.has(table)) 
+    ...tabelasBanco2.filter(table => !setBanco1.has(table))
   ];
-
+  
   if (tabelasDiferentes.length > 0) {
-    console.log("\n  Diferença nos nomes das tabelas entre os bancos:");
-    tabelasDiferentes.forEach(table => console.log(`  - ${table} está presente em apenas um dos bancos`));
+    console.error("\n Diferença nos nomes das tabelas:");
+    tabelasDiferentes.forEach(table => console.error(`  - ${table} está presente em apenas um dos bancos`));
+  
+    
+    throw new Error("Os nomes das tabelas são diferentes");
   } else {
-    console.log("\n  Os nomes das tabelas são idênticos entre os bancos!");
+    console.log("\n Os nomes das tabelas estão ok");
   }
+  
 
   const allTables = new Set([...tabelasBanco1, ...tabelasBanco2]);
 
